@@ -7,7 +7,7 @@ pipeline {
         DOCKER_IMAGE = "hbayraktar/petclinic"
         DOCKER_TAG = "$BUILD_NUMBER"
         SONARQUBE_URL = 'http://localhost:9000'
-        SONAR_TOKEN = credentials('SONAR-TOKEN')
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
     }
     stages{
         

@@ -6,6 +6,8 @@ pipeline {
         dockerhub_cred = credentials('docker-cred') // Docker Hub için tanımlı credential
         DOCKER_IMAGE = "hbayraktar/petclinic"
         DOCKER_TAG = "$BUILD_NUMBER"
+        SONARQUBE_URL = 'http://localhost:9000'
+        SONAR_TOKEN = credentials('SONAR-TOKEN')
     }
     stages{
         
@@ -14,14 +16,14 @@ pipeline {
                 git branch: 'main', changelog: false, poll: false, url: 'https://github.com/hakanbayraktar/petclinic-java.git'
             }
         }
-         stage("Sonarqube Analysis "){
-            steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=petclinic-java \
-                    -Dsonar.java.binaries=. \
-                    -Dsonar.projectKey=petclinic-java '''
-    
-                }
+          stage('SonarQube Analysis') {
+            steps {
+                sh """
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=petclinic-java \
+                    -Dsonar.host.url=${SONARQUBE_URL} \
+                    -Dsonar.login=${SONAR_TOKEN}
+                """
             }
         }
         stage("MVN build"){ // Maven build aşaması

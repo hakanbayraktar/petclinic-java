@@ -26,17 +26,7 @@ pipeline {
                 """
             }
         }
-        /*
-        stage("OWASP Dependency Check") {
-            steps {
-                script {
-                    dependencyCheck additionalArguments: '--failOnCVSS=5 --format HTML', odcInstallation: 'DP'
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                }
-            }
-        }
-
-       */
+        
        stage("MVN build"){ // Maven build aşaması
             steps{
                 sh "mvn clean install -Dmaven.test.skip=true"

@@ -2,51 +2,50 @@ pipeline {
     agent any 
     
     environment{
-        cred = credentials('aws-key')
-        dockerhub_cred = credentials('docker-cred')
+        cred = credentials('aws-key') // AWS access key için tanımlı credential
+        dockerhub_cred = credentials('docker-cred') // Docker Hub için tanımlı credential
         DOCKER_IMAGE = "hbayraktar/petclinic"
         DOCKER_TAG = "$BUILD_NUMBER"
     }
     stages{
         
-        stage("Git Checkout"){
+        stage("Git Checkout"){ // Repository checkout işlemi
             steps{
                 git branch: 'main', changelog: false, poll: false, url: 'https://github.com/hakanbayraktar/petclinic-java.git'
             }
         }
         
-        stage(" MVN build"){
+        stage("MVN build"){ // Maven build aşaması
             steps{
                 sh "mvn clean install -Dmaven.test.skip=true"
             }
         }
         
-        }
-        
-        stage("Docker Build & Push"){
+        stage("Docker Build & Push"){ // Docker image build ve push aşaması
             steps{
                 script{
-                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        
+                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {                        
                         sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                        sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG} "
+                        sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
                     }
                 }
             }
         }
         
-        stage("Update Kubernetes Manifest"){
+        stage("Update Kubernetes Manifest"){ // Kubernetes manifest dosyasını güncelleme
             steps{
                 sh "sed -i 's|hbayraktar/petclinic:latest|${DOCKER_IMAGE}:${DOCKER_TAG}|' manifest/deployment.yaml"
             }
         }
-        stage("Deploy To EKS"){
+        
+        stage("Deploy To EKS"){ // EKS'e deployment yapma
             steps{
                 sh 'aws eks update-kubeconfig --region us-east-1 --name my-eks-cluster'
                 sh 'kubectl apply -f manifest/deployment.yaml'
             }
         }
     }
+    
     post {
         always {
             echo "Job is completed"
@@ -59,3 +58,4 @@ pipeline {
         }
     }
 }
+    

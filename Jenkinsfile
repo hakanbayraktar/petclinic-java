@@ -37,7 +37,11 @@ pipeline {
                 sh "sed -i 's|hbayraktar/petclinic:latest|${DOCKER_IMAGE}:${DOCKER_TAG}|' manifest/deployment.yaml"
             }
         }
-        
+        stage("TRIVY"){
+            steps{
+                sh " trivy image adijaiswal/pet-clinic123:latest"
+            }
+        }
         stage("Deploy To EKS"){ // EKS'e deployment yapma
             steps{
                 sh 'aws eks update-kubeconfig --region us-east-1 --name my-eks-cluster'

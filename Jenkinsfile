@@ -26,13 +26,21 @@ pipeline {
                 """
             }
         }
-        stage("MVN build"){ // Maven build aşaması
+        stage('OWASP Dependency Check') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --format XML', odcInstallation: 'DP'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        }
+       
+       stage("MVN build"){ // Maven build aşaması
             steps{
                 sh "mvn clean install -Dmaven.test.skip=true"
             }
         }
         
-        stage("Docker Build & Push"){ // Docker image build ve push aşaması
+       stage("Docker Build & Push"){ // Docker image build ve push aşaması
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {                        

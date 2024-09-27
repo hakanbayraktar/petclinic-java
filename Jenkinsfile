@@ -11,7 +11,7 @@ pipeline {
         
         stage("Git Checkout"){
             steps{
-                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/hakanbayraktar/Petclinic.git'
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/hakanbayraktar/petclinic-java.git'
             }
         }
         
@@ -37,7 +37,7 @@ pipeline {
         
         stage("Update Kubernetes Manifest"){
             steps{
-                sh "sed -i 's|hbayraktar/petclinix:latest|${DOCKER_IMAGE}:${DOCKER_TAG}|' manifest/deployment.yaml"
+                sh "sed -i 's|hbayraktar/petclinic:latest|${DOCKER_IMAGE}:${DOCKER_TAG}|' manifest/deployment.yaml"
             }
         }
         stage("Deploy To EKS"){

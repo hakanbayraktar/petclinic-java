@@ -14,7 +14,16 @@ pipeline {
                 git branch: 'main', changelog: false, poll: false, url: 'https://github.com/hakanbayraktar/petclinic-java.git'
             }
         }
-        
+         stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=petclinic-java \
+                    -Dsonar.java.binaries=. \
+                    -Dsonar.projectKey=petclinic-java '''
+    
+                }
+            }
+        }
         stage("MVN build"){ // Maven build aşaması
             steps{
                 sh "mvn clean install -Dmaven.test.skip=true"

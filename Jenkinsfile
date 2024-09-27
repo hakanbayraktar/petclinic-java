@@ -26,12 +26,13 @@ pipeline {
                 """
             }
         }
-        stage('OWASP Dependency Check') {
+        stage("OWASP Dependency Check") {
             steps {
-                dependencyCheck additionalArguments: '--scan ./ --format XML', odcInstallation: 'DP'
+                dependencyCheck additionalArguments: '--scan ./ --format HTML', odcInstallation: 'DP'
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
+
        
        stage("MVN build"){ // Maven build aşaması
             steps{

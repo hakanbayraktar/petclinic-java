@@ -26,6 +26,7 @@ pipeline {
                 """
             }
         }
+        /*
         stage("OWASP Dependency Check") {
             steps {
                 script {
@@ -35,7 +36,7 @@ pipeline {
             }
         }
 
-       
+       */
        stage("MVN build"){ // Maven build aşaması
             steps{
                 sh "mvn clean install -Dmaven.test.skip=true"

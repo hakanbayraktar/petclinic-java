@@ -32,7 +32,6 @@ pipeline {
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
-        }
        
        stage("MVN build"){ // Maven build aşaması
             steps{

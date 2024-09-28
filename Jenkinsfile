@@ -53,7 +53,7 @@ pipeline {
         }
         stage("TRIVY"){
             steps{
-                trivy image --scanners vuln ${DOCKER_IMAGE}:${DOCKER_TAG}
+                 sh "trivy image --scanners vuln ${DOCKER_IMAGE}:${DOCKER_TAG}"
             }
         }
         stage("Deploy To EKS"){ // EKS'e deployment yapma

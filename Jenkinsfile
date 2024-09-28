@@ -53,7 +53,7 @@ pipeline {
         }
         stage("TRIVY"){
             steps{
-                sh " trivy image adijaiswal/pet-clinic123:latest"
+                trivy image --scanners vuln adijaiswal/pet-clinic123:latest
             }
         }
         stage("Deploy To EKS"){ // EKS'e deployment yapma

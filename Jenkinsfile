@@ -6,7 +6,7 @@ pipeline {
         dockerhub_cred = credentials('docker-cred') // Docker Hub için tanımlı credential
         DOCKER_IMAGE = "hbayraktar/petclinic"
         DOCKER_TAG = "$BUILD_NUMBER"
-        SONARQUBE_URL = 'http://localhost:9000'
+        SONARQUBE_URL = 'http://146.148.90.85:9000/'
         SONAR_TOKEN = credentials('SONAR_TOKEN')
     }
     stages{

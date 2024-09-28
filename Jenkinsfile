@@ -17,14 +17,15 @@ pipeline {
             }
         }
           stage('SonarQube Analysis') {
-            steps {
+           steps {
                 sh """
                     mvn sonar:sonar \
                     -Dsonar.projectKey=petclinic-java \
                     -Dsonar.host.url=${SONARQUBE_URL} \
-                    -Dsonar.login=${SONAR_TOKEN}
+                    -Dsonar.login=${SONAR_TOKEN} \
+                    -Dsonar.java.binaries=target/classes
                 """
-            }
+            }    
         }
         
        stage("MVN build"){ // Maven build aşaması

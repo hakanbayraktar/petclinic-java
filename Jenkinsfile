@@ -16,7 +16,14 @@ pipeline {
                 git branch: 'main', changelog: false, poll: false, url: 'https://github.com/hakanbayraktar/petclinic-java.git'
             }
         }
-          stage('SonarQube Analysis') {
+          
+        
+       stage("MVN build"){ // Maven build aşaması
+            steps{
+                sh "mvn clean install -Dmaven.test.skip=true"
+            }
+        }
+        stage('SonarQube Analysis') {
            steps {
                 sh """
                     mvn sonar:sonar \
@@ -26,12 +33,6 @@ pipeline {
                     -Dsonar.java.binaries=target/classes
                 """
             }    
-        }
-        
-       stage("MVN build"){ // Maven build aşaması
-            steps{
-                sh "mvn clean install -Dmaven.test.skip=true"
-            }
         }
         
        stage("Docker Build & Push"){ // Docker image build ve push aşaması
